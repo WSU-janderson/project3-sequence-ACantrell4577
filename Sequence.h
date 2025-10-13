@@ -11,11 +11,11 @@ class Sequence {
     private:
     string head;
     string tail;
-    size_t elements;
+    size_t *elements;
 
     public:
     //constructor
-    Sequence(size_t sz =0);
+    Sequence(size_t sz = 0);
 
     //deep copy
     Sequence(const Sequence& s);
@@ -49,7 +49,6 @@ class Sequence {
     void erase(size_t position);
     void erase(size_t position, size_t count);
 
-    //overloads << for output
     friend ostream& operator<<(ostream& os, const Sequence& s);
 };
 
