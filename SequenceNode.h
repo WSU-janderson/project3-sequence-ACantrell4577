@@ -25,9 +25,9 @@ public:
     SequenceNode(string item) :next(nullptr), prev(nullptr), item(item){};
 
     //setters and getters
-    SequenceNode* get_Next();
-    SequenceNode* get_Prev();
-    string get_Item();
+    SequenceNode* get_Next() const;
+    SequenceNode* get_Prev() const;
+    string get_Item() const;
     void set_Next(SequenceNode* next);
     void set_Prev(SequenceNode* prev);
     void set_Item(string item);
