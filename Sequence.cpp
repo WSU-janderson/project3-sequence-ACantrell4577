@@ -49,7 +49,7 @@ Sequence& Sequence:: operator=(const Sequence &s) {
     return *this;
 }
 
-//
+//returns the item inside the sequence's node at position
 string &Sequence::operator[](size_t position) {
 
     //if position is in scope
@@ -77,9 +77,43 @@ string &Sequence::operator[](size_t position) {
 
 void Sequence::push_back(string item) {
 
+    //end node represents the tail
+    SequenceNode* endNode = this->tail;
+
+    //Creates the new node
+    SequenceNode* newNode = new SequenceNode(item);
+
+    //sets the address of the new node to the next value of the previous tail
+    endNode->set_Next(newNode);
+
+    //Sets the prev value of the new tail to the previous node
+    newNode->set_Prev(endNode);
+
+    //sets the new tail
+    this->tail = newNode;
+
+    //increases the sequence size
+    sequenceSize++;
+
 }
 
 void Sequence::pop_back() {
+
+    //sets the tail as the temp node
+    SequenceNode* endNode = this->tail;
+
+    //sets another temp node to what will be the new tail
+    SequenceNode* newTail = endNode->get_Prev();
+
+    //sets the new tail for the sequence
+    this->tail = newTail;
+    newTail->set_Next(nullptr);
+
+    //deallocates the old node
+    delete endNode;
+
+    //decrements the sequence size
+    this->sequenceSize--;
 
 }
 
