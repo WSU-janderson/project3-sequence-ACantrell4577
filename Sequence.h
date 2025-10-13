@@ -4,15 +4,18 @@
 #include <ostream>
 #include <string>
 
+#include "SequenceNode.h"
+
 using namespace std;
 
 class Sequence {
 
     //variable declaration
     private:
-    string head;
-    string tail;
-    size_t *elements;
+    SequenceNode *head;
+    SequenceNode *tail;
+    size_t *element;
+    size_t sequenceSize;
 
     public:
     //constructor
@@ -55,7 +58,7 @@ class Sequence {
 
 ostream& operator<<(ostream& os, const Sequence& s) {
 
-    os << s.elements;
+    os << s.element;
     return os;
 
 };

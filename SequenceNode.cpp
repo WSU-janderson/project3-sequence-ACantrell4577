@@ -4,7 +4,7 @@
 using namespace std;
 
 //returns the stored data in the node
-string SequenceNode::get_Item() const{
+string &SequenceNode::get_Item(){
     return this->item;
 }
 

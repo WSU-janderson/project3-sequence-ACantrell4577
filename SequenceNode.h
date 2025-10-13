@@ -27,7 +27,7 @@ public:
     //setters and getters
     SequenceNode* get_Next() const;
     SequenceNode* get_Prev() const;
-    string get_Item() const;
+    string &get_Item();
     void set_Next(SequenceNode* next);
     void set_Prev(SequenceNode* prev);
     void set_Item(string item);
