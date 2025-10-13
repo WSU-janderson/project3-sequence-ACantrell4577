@@ -8,6 +8,8 @@ add_executable(SequenceDebug
         SequenceDebug.cpp
         Sequence.cpp
         Sequence.h
+        SequenceNode.cpp
+        SequenceNode.h
 )
 
 # once you have everything in Sequence implemented, you can run SequenceTestHarness
