@@ -1,6 +1,7 @@
 
 #ifndef SEQUENCE_H
 #define SEQUENCE_H
+#include <ostream>
 #include <string>
 
 using namespace std;
@@ -50,6 +51,13 @@ class Sequence {
     void erase(size_t position, size_t count);
 
     friend ostream& operator<<(ostream& os, const Sequence& s);
+};
+
+ostream& operator<<(ostream& os, const Sequence& s) {
+
+    os << s.elements;
+    return os;
+
 };
 
 #endif
