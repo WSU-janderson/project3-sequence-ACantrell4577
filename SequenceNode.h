@@ -13,11 +13,12 @@ class SequenceNode {
 
     //variable declaration
 private:
+
+
+public:
     SequenceNode* next;
     SequenceNode* prev;
     string item;
-
-public:
     //default constructor
     SequenceNode() : next(nullptr), prev(nullptr){};
 
