@@ -75,6 +75,7 @@ string &Sequence::operator[](size_t position) {
 
 }
 
+//ads item to end of sequence
 void Sequence::push_back(string item) {
 
     //end node represents the tail
@@ -97,6 +98,7 @@ void Sequence::push_back(string item) {
 
 }
 
+//removes from end of sequence
 void Sequence::pop_back() {
 
     //sets the tail as the temp node
@@ -117,20 +119,33 @@ void Sequence::pop_back() {
 
 }
 
+
+//inserts item at position
 void Sequence::insert(size_t position, string item) {
 
 
     //if position is in scope
     if (position < this->size() && position >= 0) {
 
-        //creates a temp node to iterate through the sequence
-        SequenceNode* currentNode = this->head;
-        for (int i = 0; i < position; i++) {
 
-            //currentNode is set to the next node
-            currentNode=currentNode->get_Next();
+        //if sequence is empty
+        if (this->head == nullptr && this->tail == nullptr) {
+
+            //head becomes the new node
+            this->head = new SequenceNode(item);
 
         }
+
+        //if not empty
+        else {
+            //creates a temp node to iterate through the sequence
+            SequenceNode* currentNode = this->head;
+            for (int i = 0; i < position; i++) {
+
+                //currentNode is set to the next node
+                currentNode=currentNode->get_Next();
+
+            }
 
             //creates new node
             SequenceNode* newNode = new SequenceNode(item);
@@ -150,6 +165,26 @@ void Sequence::insert(size_t position, string item) {
                 newNode->set_Next(pushedNode);
             }
 
+            //if the node is inserted at the head
+            else if (currentNode->get_Prev() == nullptr) {
+                this->head = newNode;
+                //creates a temp reference node
+                SequenceNode* pushedNode = currentNode->get_Next();
+                newNode->set_Next(pushedNode);
+            }
+            //if inserted at tail
+            else {
+                //make newNode tail
+                this->tail = newNode;
+
+                //adds link to the current tail
+                currentNode->set_Next(newNode);
+            }
+        }
+        //increases sequence size
+        sequenceSize++;
+
+
     }
     //if the position is out of bounds throw an exception
     else {
@@ -157,25 +192,71 @@ void Sequence::insert(size_t position, string item) {
     }
 }
 
+//returns head item
 string Sequence::front() const {
 
+    //if head isnt empty throw exception
+    if (this->head == nullptr) {
+        throw exception();
+    }
+    else {
+        return this->head->get_Item();
+    }
+
 }
 
+//returns tail item
 string Sequence::back() const {
 
+    //if tail is empty throw exception
+    if (this->tail == nullptr) {
+        throw exception();
+    }
+    //if not empty returns tail element
+    else {
+        return this->tail->get_Item();
+    }
+
 }
 
+//returns true if sequence is empty
 bool Sequence::empty() const {
 
+    //if empty
+    if (this->head == nullptr && this->tail == nullptr) {
+        return 1;
+    }
+    //if not empty
+    else {
+        return 0;
+    }
+
 }
 
+//returns sequence size
 size_t Sequence::size() const {
-
     return sequenceSize;
-
 }
 
 void Sequence::clear() {
+
+    if (!(this->empty())) {
+        SequenceNode* currentNode = this->head;
+        for (size_t i = 0; i < this->size(); i++) {
+
+            //if current node is not tail
+            if (currentNode->get_Next() != nullptr) {
+
+                //move the current node forward deleteing previous node
+                currentNode = currentNode->get_Next();
+                delete currentNode->get_Prev();
+            }
+            //if tail delete currentNode
+            else {
+                delete currentNode;
+            }
+        }
+    }
 
 }
 
