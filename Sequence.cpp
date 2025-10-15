@@ -250,10 +250,12 @@ void Sequence::clear() {
                 //move the current node forward deleteing previous node
                 currentNode = currentNode->get_Next();
                 delete currentNode->get_Prev();
+                sequenceSize--;
             }
             //if tail delete currentNode
             else {
                 delete currentNode;
+                sequenceSize--;
             }
         }
     }
@@ -262,10 +264,57 @@ void Sequence::clear() {
 
 void Sequence::erase(size_t position) {
 
+    //if removal is in scope
+    if (position < this->size() && position >= 0) {
+
+        SequenceNode* currentNode = this->head;
+
+        //itterates throught the sequence until desired node is found
+        for (size_t i = 0; i < position; i++) {
+            currentNode=currentNode->get_Next();
+        }
+
+        //when found delete node
+        delete currentNode;
+        sequenceSize--;
+    }
+
+    //else throw exception
+    else {
+        throw exception();
+    }
+
 }
 
 void Sequence::erase(size_t position, size_t count) {
 
+    //if the total desired elements to be removed are in scope
+    if ((position + count - 1) < this->size() && position >= 0) {
+
+        SequenceNode* startNode = this->head;
+        SequenceNode* currentNode = this->head;
+
+        //itterates through sequence
+        for (size_t i = 0; i < (position + count - 1); i++) {
+
+            //if start of removal is found set starting node to be saved for later
+            if ((i+1) == position) {
+                startNode = currentNode;
+            }
+            //if itterating past position and before the end of the count move forward and delete the current node
+            else if (((i+1) <= (position + count - 1)) && ((i+1) > position) ) {
+                currentNode = currentNode->get_Next();
+                delete currentNode->get_Prev();
+                sequenceSize--;
+            }
+            //if neither move forward
+            else {
+                currentNode = currentNode->get_Next();
+            }
+        }
+
+        //sets mends the sequence by making the startNode's next equal to the current node
+        startNode->set_Next(currentNode);
+    }
+
 }
-
-
