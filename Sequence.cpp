@@ -57,7 +57,7 @@ string &Sequence::operator[](size_t position) {
 
         //creates a temp node to iterate through the sequence
         SequenceNode* currentNode = this->head;
-        for (int i = 0; i < this->size(); i++) {
+        for (int i = 0; i < position; i++) {
 
             //currentNode is set to the next node
             currentNode=currentNode->get_Next();
@@ -119,6 +119,42 @@ void Sequence::pop_back() {
 
 void Sequence::insert(size_t position, string item) {
 
+
+    //if position is in scope
+    if (position < this->size() && position >= 0) {
+
+        //creates a temp node to iterate through the sequence
+        SequenceNode* currentNode = this->head;
+        for (int i = 0; i < position; i++) {
+
+            //currentNode is set to the next node
+            currentNode=currentNode->get_Next();
+
+        }
+
+            //creates new node
+            SequenceNode* newNode = new SequenceNode(item);
+
+            //if the current node is the tail
+            if (currentNode->get_Next() != nullptr) {
+
+                //creates a temp reference node
+                SequenceNode* pushedNode = currentNode->get_Next();
+
+                //inserts the new node by changing old next and prev
+                currentNode->set_Next(newNode);
+                pushedNode->set_Prev(newNode);
+
+                //news new next and prev
+                newNode->set_Prev(currentNode);
+                newNode->set_Next(pushedNode);
+            }
+
+    }
+    //if the position is out of bounds throw an exception
+    else {
+        throw exception();
+    }
 }
 
 string Sequence::front() const {
