@@ -1,6 +1,7 @@
 #include "Sequence.h"
 #include <exception>
 #include <iostream>
+#include <ranges>
 
 using namespace std;
 
@@ -17,18 +18,27 @@ Sequence::Sequence(size_t sz) {
     }
 }
 
-//creates deep copy os sequence s
+//creates deep copy of sequence s
 Sequence::Sequence(const Sequence &s) {
 
-    //dynamically allocates memory
-    this->element = new size_t;
 
-    //copies the provided sequence
-    this->head = s.head;
-    this->tail = s.tail;
-    this->sequenceSize = s.sequenceSize;
-    *(this->element) = *(s.element);
+    //if they arnt already equal
+    if (this !=  &s) {
+        //destruct
+        this->~Sequence();
 
+        //creates dummy nodes
+        SequenceNode* currentNode = s.head;
+
+        //itterates through the other sequence copying the data
+        for (int i = 0; i < s.sequenceSize; i++) {
+
+            push_back(currentNode->item);
+            currentNode = currentNode->next;
+
+
+        }
+    }
 }
 
 //destructor
@@ -39,16 +49,22 @@ Sequence::~Sequence() {
 //creates a deep copy and returns a reference
 Sequence& Sequence:: operator=(const Sequence &s) {
 
-    //if they arnt already euqal
+    //if they arnt already equal
     if (this !=  &s) {
         //destruct
         this->~Sequence();
 
-        //create deep copy
-        this->element = new size_t;
-        this->head = s.head;
-        this->tail = s.tail;
-        *(this->element) = *(s.element);
+        //creates dummy nodes
+        SequenceNode* currentNode = s.head;
+
+        //itterates through the other sequence copying the data
+        for (int i = 0; i < s.sequenceSize; i++) {
+
+            push_back(currentNode->item);
+            currentNode = currentNode->next;
+
+
+        }
     }
 
     //return the reference to sequence object
@@ -337,13 +353,11 @@ void Sequence::erase(size_t position) {
 void Sequence::erase(size_t position, size_t count) {
 
     //if the total desired elements to be removed are in scope
-    if ((position + count) < this->size() && position >= 0) {
+    if ((position + count - 1) < this->size() && position >= 0) {
 
         SequenceNode* startNode = this->head;
         SequenceNode* currentNode = this->head;
         SequenceNode* delNode = nullptr;
-
-        //TODO ADD HEAD AND TAIL CASE
 
         //itterates through sequence
         for (size_t i = 0; i < (position + count); i++) {
@@ -360,8 +374,13 @@ void Sequence::erase(size_t position, size_t count) {
                 //sets node for deletion
                 delNode = currentNode;
 
-                //itterates to the next node deleting the node prior
-                currentNode = currentNode->next;
+                if (currentNode->next == nullptr) {
+                    this->tail = startNode;
+                }
+                else {
+                    //itterates to the next node deleting the node prior
+                    currentNode = currentNode->next;
+                }
                 delete delNode;
                 sequenceSize--;
             }

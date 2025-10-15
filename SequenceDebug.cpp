@@ -14,7 +14,7 @@ using namespace std;
 
 int main() {
     Sequence s(5);
-    s.insert(0, to_string(99));
+    s.erase(1,2);
     cout << s;
 
     s.clear();

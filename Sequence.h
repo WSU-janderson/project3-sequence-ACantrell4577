@@ -14,7 +14,6 @@ class Sequence {
     private:
     SequenceNode *head;
     SequenceNode *tail;
-    size_t *element;
     size_t sequenceSize;
 
     public:

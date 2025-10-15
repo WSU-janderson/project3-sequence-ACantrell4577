@@ -20,18 +20,11 @@ public:
     SequenceNode* prev;
     string item;
     //default constructor
-    SequenceNode() : next(nullptr), prev(nullptr), item("") {};
+    SequenceNode() : next(nullptr), prev(nullptr), item(""){};
 
     //overloaded constructor
     SequenceNode(string item) :next(nullptr), prev(nullptr), item(item){};
 
-    //setters and getters
-    SequenceNode* get_Next() const;
-    SequenceNode* get_Prev() const;
-    string &get_Item();
-    void set_Next(SequenceNode* next);
-    void set_Prev(SequenceNode* prev);
-    void set_Item(string item);
 };
 
 

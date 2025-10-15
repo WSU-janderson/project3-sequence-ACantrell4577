@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include "Sequence.h"
+#include "SequenceNode.h"
 
 using namespace std;
 
