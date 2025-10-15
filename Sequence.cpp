@@ -155,7 +155,6 @@ void Sequence::insert(size_t position, string item) {
             currentNode->prev = newNode;
             this->head = newNode;
 
-
         }
 
         //if not empty
@@ -166,7 +165,8 @@ void Sequence::insert(size_t position, string item) {
             //creates new node
             SequenceNode* newNode = new SequenceNode(item);
 
-            for (int i = 0; i < position; i++) {
+            for (int i = 0; i < position-1; i++) {
+
                 //dont move forward if at tail
                 if (currentNode->next != nullptr) {
                     //currentNode is set to the next node
@@ -197,8 +197,6 @@ void Sequence::insert(size_t position, string item) {
                     //make newNode tail
                     this->tail = newNode;
 
-
-
                 }
                 //if inserted at head
                 else {
@@ -207,9 +205,10 @@ void Sequence::insert(size_t position, string item) {
                     SequenceNode* pushedNode = currentNode->next;
                     newNode->next = pushedNode;
                 }
-            //increases sequence size
-            sequenceSize++;
+
         }
+        //increases sequence size
+        sequenceSize++;
     }
         //if the position is out of bounds throw an exception
         else {
@@ -300,10 +299,31 @@ void Sequence::erase(size_t position) {
             currentNode=currentNode->next;
         }
 
-        //TODO ADD HEAD AND TAIL CASE
+        //if head set new head and delete the old
+        if (currentNode == this->head) {
 
-        //when found delete node
-        delete currentNode;
+            //sets head to the second node and sets prev to null
+            this->head = currentNode->next;
+            this->head->next = nullptr;
+
+            //removes old node
+            delete currentNode;
+        }
+
+        //if tail is set for deletion set new tail before deletion
+        else if (currentNode == this->tail) {
+            this->tail = currentNode->prev;
+            this->tail->next = nullptr;
+            delete currentNode;
+        }
+        else {
+            //when found remove from sequence
+            currentNode->prev->next = currentNode->next;
+            currentNode->next->prev = currentNode->prev;
+
+            //delete node
+            delete currentNode;
+        }
         sequenceSize--;
     }
 
@@ -317,24 +337,32 @@ void Sequence::erase(size_t position) {
 void Sequence::erase(size_t position, size_t count) {
 
     //if the total desired elements to be removed are in scope
-    if ((position + count - 1) < this->size() && position >= 0) {
+    if ((position + count) < this->size() && position >= 0) {
 
         SequenceNode* startNode = this->head;
         SequenceNode* currentNode = this->head;
+        SequenceNode* delNode = nullptr;
 
         //TODO ADD HEAD AND TAIL CASE
 
         //itterates through sequence
-        for (size_t i = 0; i < (position + count - 1); i++) {
+        for (size_t i = 0; i < (position + count); i++) {
+
 
             //if start of removal is found set starting node to be saved for later
             if ((i+1) == position) {
                 startNode = currentNode;
+                currentNode = currentNode->next;
             }
             //if itterating past position and before the end of the count move forward and delete the current node
-            else if (((i+1) <= (position + count - 1)) && ((i+1) > position) ) {
+            else if (((i+1) <= (position + count) && ((i+1) > position) )) {
+
+                //sets node for deletion
+                delNode = currentNode;
+
+                //itterates to the next node deleting the node prior
                 currentNode = currentNode->next;
-                delete currentNode->prev;
+                delete delNode;
                 sequenceSize--;
             }
             //if neither move forward
@@ -345,6 +373,7 @@ void Sequence::erase(size_t position, size_t count) {
 
         //sets mends the sequence by making the startNode's next equal to the current node
         startNode->next = currentNode;
+        currentNode->prev = startNode;
     }
 
 }
