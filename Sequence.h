@@ -53,13 +53,8 @@ class Sequence {
     void erase(size_t position);
     void erase(size_t position, size_t count);
 
-    friend ostream& operator<<(ostream& os, const Sequence& s){
-
-    os << s.element;
-    return os;
-
+    friend ostream& operator<<(ostream& os, const Sequence& s);
 };
 
-};
 
 #endif

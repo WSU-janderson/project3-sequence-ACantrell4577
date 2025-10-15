@@ -20,7 +20,7 @@ public:
     SequenceNode* prev;
     string item;
     //default constructor
-    SequenceNode() : next(nullptr), prev(nullptr){};
+    SequenceNode() : next(nullptr), prev(nullptr), item("") {};
 
     //overloaded constructor
     SequenceNode(string item) :next(nullptr), prev(nullptr), item(item){};

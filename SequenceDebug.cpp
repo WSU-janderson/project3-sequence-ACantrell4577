@@ -7,11 +7,17 @@
  * SequenceDebug from the drop-down menu next to the Build (hammer icon) if it is on SequenceTestHarness
  */
 #include <iostream>
+#include <string>
+#include "Sequence.h"
 
 using namespace std;
 
 int main() {
-    cout << "Your project is ready to go!" << endl;
+    Sequence s(5);
+    s.insert(0, to_string(99));
+    cout << s;
+
+    s.clear();
 
     return 0;
 }

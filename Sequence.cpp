@@ -6,10 +6,15 @@ using namespace std;
 
 //constructor
 Sequence::Sequence(size_t sz) {
-    element = new size_t[sz];
-    this->sequenceSize = sz;
+    this->sequenceSize = 0;
     this->head = nullptr;
     this->tail = nullptr;
+
+    //populates the sequence equal to the provided size
+    for (int i = 0; i < sz; i++) {
+        //fills the sequence with i
+        this->push_back(std::to_string(i));
+    }
 }
 
 //creates deep copy os sequence s
@@ -28,7 +33,7 @@ Sequence::Sequence(const Sequence &s) {
 
 //destructor
 Sequence::~Sequence() {
-    delete[] this->element;
+    this->clear();
 }
 
 //creates a deep copy and returns a reference
@@ -55,16 +60,15 @@ string &Sequence::operator[](size_t position) {
 
     //if position is in scope
     if (position < this->size() && position >= 0) {
-
         //creates a temp node to iterate through the sequence
         SequenceNode* currentNode = this->head;
-        for (int i = 0; i < position; i++) {
+        if (position != 0) {
+            for (int i = 0; i < position; i++) {
 
-            //currentNode is set to the next node
-            currentNode = currentNode->next;
-
+                //currentNode is set to the next node
+                currentNode = currentNode->next;
+            }
         }
-
         //returns the item of the specified position node
         return currentNode->item;
 
@@ -79,21 +83,29 @@ string &Sequence::operator[](size_t position) {
 //ads item to end of sequence
 void Sequence::push_back(string item) {
 
-    //end node represents the tail
-    SequenceNode* endNode = this->tail;
 
-    //Creates the new node
-    SequenceNode* newNode = new SequenceNode(item);
+    //if no head create head
+    if (this->empty()) {
+        this->head = this->tail = new SequenceNode(item);
+    }
 
-    //sets the address of the new node to the next value of the previous tail
-    endNode->next = newNode;
+    //if head append to the end of the sequence
+    else {
+        //end node represents the tail
+        SequenceNode* endNode = this->tail;
 
-    //Sets the prev value of the new tail to the previous node
-    newNode->prev = endNode;
+        //Creates the new node
+        SequenceNode* newNode = new SequenceNode(item);
 
-    //sets the new tail
-    this->tail = newNode;
+        //sets the address of the new node to the next value of the previous tail
+        endNode->next = newNode;
 
+        //Sets the prev value of the new tail to the previous node
+        newNode->prev = endNode;
+
+        //sets the new tail
+        this->tail = newNode;
+    }
     //increases the sequence size
     sequenceSize++;
 
@@ -120,20 +132,29 @@ void Sequence::pop_back() {
 
 }
 
-
 //inserts item at position
 void Sequence::insert(size_t position, string item) {
-
-
     //if position is in scope
     if (position < this->size() && position >= 0) {
-
-
         //if sequence is empty
         if (this->head == nullptr && this->tail == nullptr) {
-
             //head becomes the new node
             this->head = new SequenceNode(item);
+
+        }
+
+        //if position is head
+        else if (position == 0) {
+
+            //declare sequence nodes
+            SequenceNode* newNode = new SequenceNode(item);
+            SequenceNode* currentNode = this->head;
+
+            //position new head node
+            newNode->next = currentNode;
+            currentNode->prev = newNode;
+            this->head = newNode;
+
 
         }
 
@@ -141,56 +162,59 @@ void Sequence::insert(size_t position, string item) {
         else {
             //creates a temp node to iterate through the sequence
             SequenceNode* currentNode = this->head;
-            for (int i = 0; i < position; i++) {
-
-                //currentNode is set to the next node
-                currentNode=currentNode->next;
-
-            }
 
             //creates new node
             SequenceNode* newNode = new SequenceNode(item);
 
-            //if the current node is the tail
-            if (currentNode->next != nullptr) {
-
-                //creates a temp reference node
-                SequenceNode* pushedNode = currentNode->next;
-
-                //inserts the new node by changing old next and prev
-                currentNode->next = newNode;
-                pushedNode->prev = newNode;
-
-                //news new next and prev
-                newNode->prev = currentNode;
-                newNode->next = pushedNode;
+            for (int i = 0; i < position; i++) {
+                //dont move forward if at tail
+                if (currentNode->next != nullptr) {
+                    //currentNode is set to the next node
+                    currentNode=currentNode->next;
+                }
             }
+                //if the current node is not the tail
+                if (currentNode->next != nullptr) {
 
-            //if the node is inserted at the head
-            else if (currentNode->prev == nullptr) {
-                this->head = newNode;
-                //creates a temp reference node
-                SequenceNode* pushedNode = currentNode->next;
-                newNode->next = pushedNode;
-            }
-            //if inserted at tail
-            else {
-                //make newNode tail
-                this->tail = newNode;
+                    //creates a temp reference node
+                    SequenceNode* pushedNode = currentNode->next;
 
-                //adds link to the current tail
-                currentNode->next = newNode;
-            }
+                    //inserts the new node by changing old next and prev
+                    currentNode->next = newNode;
+                    pushedNode->prev = newNode;
+
+                    //news new next and prev
+                    newNode->prev = currentNode;
+                    newNode->next = pushedNode;
+                }
+
+                //if the node is inserted at the tail
+                else if (currentNode->next == nullptr) {
+
+                    //adds link to the current tail
+                    currentNode->next = newNode;
+
+                    //make newNode tail
+                    this->tail = newNode;
+
+
+
+                }
+                //if inserted at head
+                else {
+                    this->head = newNode;
+                    //creates a temp reference node
+                    SequenceNode* pushedNode = currentNode->next;
+                    newNode->next = pushedNode;
+                }
+            //increases sequence size
+            sequenceSize++;
         }
-        //increases sequence size
-        sequenceSize++;
-
-
     }
-    //if the position is out of bounds throw an exception
-    else {
-        throw exception();
-    }
+        //if the position is out of bounds throw an exception
+        else {
+            throw exception();
+        }
 }
 
 //returns head item
@@ -259,6 +283,7 @@ void Sequence::clear() {
                 sequenceSize--;
             }
         }
+        this->head = this->tail = nullptr;
     }
 
 }
@@ -274,6 +299,8 @@ void Sequence::erase(size_t position) {
         for (size_t i = 0; i < position; i++) {
             currentNode=currentNode->next;
         }
+
+        //TODO ADD HEAD AND TAIL CASE
 
         //when found delete node
         delete currentNode;
@@ -294,6 +321,8 @@ void Sequence::erase(size_t position, size_t count) {
 
         SequenceNode* startNode = this->head;
         SequenceNode* currentNode = this->head;
+
+        //TODO ADD HEAD AND TAIL CASE
 
         //itterates through sequence
         for (size_t i = 0; i < (position + count - 1); i++) {
@@ -319,3 +348,25 @@ void Sequence::erase(size_t position, size_t count) {
     }
 
 }
+
+//ostream overload
+ostream& operator<<(ostream& os, const Sequence& s){
+
+    //declares node pointer
+    SequenceNode* node = s.head;
+
+    //formatting
+    os << "< ";
+
+    //while not at the end of the sequence print the data
+    while (node != nullptr) {
+        os << node->item << ", ";
+        node = node->next;
+    }
+    //formatting
+    os << ">" << endl;
+
+    //return ostream
+    return os;
+
+};
